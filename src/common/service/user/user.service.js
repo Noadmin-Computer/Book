@@ -1,10 +1,27 @@
 import userModel from "../../db/model/user/user.model.js";
+import sha256 from "sha256";
 import { Types } from "mongoose";
 
 export async function createUserService(data) {
   try {
-    const create = await userModel.create(data);
-    return create;
+      data.password=sha256(data.password)
+      const user = await userModel.create(data)
+      return user
+  } catch (error) {
+      console.log(error.message);
+      throw error
+  }
+}
+
+
+export async function loginService(data) {
+  try {
+    let password = sha256(data.password);
+    const login = await userModel.findOne({
+      password: password,
+      email: data.email,
+    });
+    return login;
   } catch (error) {
     console.log(error.message);
     throw error;

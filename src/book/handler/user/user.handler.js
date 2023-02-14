@@ -3,42 +3,40 @@ import {
   createUserService,
   deleteUserByQueryService,
   getUserByQueryService,
+  loginService,
   updateUserByQueryService,
 } from "../../../common/service/user/user.service.js";
 
-export async function userCreateHandler(request, response) {
+export async function userCreateHandler(request, response){
   try {
-    const data = request.body;
-    let newUser = await createUserService(data);
-
-    return response.json({
-      status: 200,
-      message: "Ok",
-      token: jwt.sign({ _id: newUser._id }),
-      data: newUser,
-    });
+      const data = request.body
+      const res = await createUserService(data)
+      const token = jwt.sign(data)
+      return response.json({
+          status: 200,
+          message: "Ok",
+          token,
+          data: res
+      })
   } catch (error) {
-    response.json({
-      status: 400,
-      message: error.message,
-    });
+      response.json({
+          status: 400,
+          message: error.message
+      })
   }
 }
+
 
 export async function userLoginHandler(request, response) {
   try {
     const data = request.body;
-    const query = {
-      email: data.email,
-      password: data.password,
-    };
-    let user = await getUserByQueryService(query);
-    console.log(user);
-
+    const res = await loginService(data);
+    const token = jwt.sign(data);
     return response.json({
       status: 200,
-      message: "ok",
-      token: jwt.sign({ _id: user._id }),
+      message: "Ok",
+      token,
+      data: res,
     });
   } catch (error) {
     response.json({

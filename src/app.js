@@ -16,7 +16,7 @@ app.use(express.json());
 app.use("/sign", userRoutes);
 app.use("/main", mainRoutes);
 app.use("/search", searchRoutes);
-app.use(authToken);
+// app.use(authToken);
 app.use("/store", storeRoutes);
 
 async function start() {
